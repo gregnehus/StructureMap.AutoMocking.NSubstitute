@@ -1,7 +1,11 @@
 require 'albacore'
+require 'version_bumper'
+
+version = bumper_version
+
 
 product_name = "StructureMap.AutoMocking.NSubstitute"
-version = "2.0.0"
+
 current_dir = File.dirname(__FILE__)
 mspec_runner_path = "#{current_dir}/packages/Machine.Specifications.0.5.8/tools/mspec-clr4.exe"
 nuget_path = "#{current_dir}/packages/NuGet.CommandLine.2.0.40001/tools/NuGet.exe"
@@ -11,18 +15,25 @@ assembly_path = "#{properties_path}/AssemblyInfo.cs"
 test_assembly = "StructureMap.AutoMocking.NSubstitute.Specs.dll"
 test_assembly_path = "#{output_path}/#{test_assembly}"
 
-task :default => [:assemblyinfo,:build, :mspec, :createNugetPackage]
+task :default => [:build, :mspec, :createNugetPackage]
 
-assemblyinfo :assemblyinfo do |asm|
-  asm.version = version
-  asm.file_version = version
+task :bumpVersion do
+	version.bump_build
+	version.write('VERSION')
+end
+
+assemblyinfo :createAssembly => :bumpVersion do |asm|
+  build_version = version.to_s
+  
+  asm.version = build_version
+  asm.file_version = build_version
   asm.product_name = product_name
   asm.description = "This package gives NSubstitute support for AutoMocking with StructureMap"
   asm.copyright = "Greg Nehus Copyright 2012"
   asm.output_file = assembly_path
 end
 
-msbuild :build do |bld|
+msbuild :build => :createAssembly do |bld|
 	bld.properties = {
 		:configuration => :Release,
 		:outputpath => output_path
@@ -39,5 +50,5 @@ end
 
 exec :createNugetPackage do |cmd|
 	cmd.command = nuget_path
-	cmd.parameters = "pack #{product_name}.nuspec -version #{version} -nodefaultexcludes -outputdirectory #{output_path} -basepath #{output_path}"
+	cmd.parameters = "pack #{product_name}.nuspec -version #{version.to_s} -nodefaultexcludes -outputdirectory #{output_path} -basepath #{output_path}"
 end
