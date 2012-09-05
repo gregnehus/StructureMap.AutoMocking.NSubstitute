@@ -24,12 +24,12 @@ end
 
 assemblyinfo :createAssembly => :bumpVersion do |asm|
   build_version = version.to_s
-  
+  asm.title = product_name
   asm.version = build_version
   asm.file_version = build_version
+  asm.company_name = "Greg Nehus"
   asm.product_name = product_name
   asm.description = "This package gives NSubstitute support for AutoMocking with StructureMap"
-  asm.copyright = "Greg Nehus Copyright 2012"
   asm.output_file = assembly_path
 end
 

@@ -1,7 +1,8 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
+[assembly: AssemblyTitle("StructureMap.AutoMocking.NSubstitute")]
 [assembly: AssemblyDescription("This package gives NSubstitute support for AutoMocking with StructureMap")]
+[assembly: AssemblyCompany("Greg Nehus")]
 [assembly: AssemblyProduct("StructureMap.AutoMocking.NSubstitute")]
-[assembly: AssemblyCopyright("Greg Nehus Copyright 2012")]
-[assembly: AssemblyVersion("2.0.0.4")]
-[assembly: AssemblyFileVersion("2.0.0.4")]
+[assembly: AssemblyVersion("2.0.0.7")]
+[assembly: AssemblyFileVersion("2.0.0.7")]
