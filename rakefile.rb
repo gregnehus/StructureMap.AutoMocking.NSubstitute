@@ -6,6 +6,8 @@ current_dir = File.dirname(__FILE__)
 mspec_runner_path = "#{current_dir}/packages/Machine.Specifications.0.5.8/tools/mspec-clr4.exe"
 nuget_path = "#{current_dir}/packages/NuGet.CommandLine.2.0.40001/tools/NuGet.exe"
 output_path   = "#{current_dir}/bin"
+properties_path = "#{current_dir}/StructureMap.AutoMocking.nSubstitute/Properties"
+assembly_path = "#{properties_path}/AssemblyInfo.cs"
 test_assembly = "StructureMap.AutoMocking.NSubstitute.Specs.dll"
 test_assembly_path = "#{output_path}/#{test_assembly}"
 
@@ -13,10 +15,11 @@ task :default => [:assemblyinfo,:build, :mspec, :createNugetPackage]
 
 assemblyinfo :assemblyinfo do |asm|
   asm.version = version
+  asm.file_version = version
   asm.product_name = product_name
   asm.description = "This package gives NSubstitute support for AutoMocking with StructureMap"
   asm.copyright = "Greg Nehus Copyright 2012"
-  asm.output_file = "#{output_path}/AssemblyInfo.cs"
+  asm.output_file = assembly_path
 end
 
 msbuild :build do |bld|
