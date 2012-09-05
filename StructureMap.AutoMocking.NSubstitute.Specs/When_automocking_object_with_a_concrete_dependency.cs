@@ -4,7 +4,7 @@ using NSubstitute;
 
 namespace StructureMap.AutoMocking.NSubstitute.Specs
 {
-    [Subject(typeof(NSubstituteAutoMocker<>))]
+    [Subject(typeof(NSubstituteAutoMockerBuilder))]
     public class When_automocking_object_with_a_concrete_dependency : With<TestObjectWithConcreteDependency>
     {
         static string _result;

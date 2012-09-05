@@ -6,9 +6,9 @@ namespace StructureMap.AutoMocking.NSubstitute.Specs
        where TSubject : class
     {
         Establish context = () =>
-        {
-            Mocks = new NSubstituteAutoMocker<TSubject>();
-        };
+            {
+                Mocks = (AutoMocker<TSubject>)NSubstituteAutoMockerBuilder.Build<TSubject>();
+            };
 
         public static TDependency For<TDependency>()
             where TDependency : class
@@ -23,7 +23,7 @@ namespace StructureMap.AutoMocking.NSubstitute.Specs
             return x;
         }
 
-        public static NSubstituteAutoMocker<TSubject> Mocks { get; private set; }
+        public static AutoMocker<TSubject> Mocks { get; private set; }
         public static TSubject Subject { get { return Mocks.ClassUnderTest; } }
     }
 }
