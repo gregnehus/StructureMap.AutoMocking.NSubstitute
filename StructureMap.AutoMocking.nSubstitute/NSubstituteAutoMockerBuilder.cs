@@ -60,22 +60,18 @@ namespace StructureMap.AutoMocking.NSubstitute
         static readonly string AllCode = string.Format("using System; using System.Linq; using System.Reflection; namespace StructureMap.AutoMocking{{{0}{1}{2}}}", AutoMockerCode,
                                                ServiceLocatorCode, NSubstituteFactoryCode);
 
+        static Type _assembledType;
+
+
         public static object Build<T>()
         {
-            var result = Compile(AllCode);
+            var type = _assembledType ?? (_assembledType = Compile(AllCode));
 
-            if (result.Errors.Count != 0)
-                throw new Exception("Could not compile");
-
-            var assembly = result.CompiledAssembly;
-            var type =
-                assembly.GetTypes().FirstOrDefault(
-                    x => x.ContainsGenericParameters && x.Name.Contains("NSubstituteAutoMocker"));
-            var genericType = type.MakeGenericType(new Type[] {typeof (T)});
+            var genericType = type.MakeGenericType(new[] { typeof(T) });
 
             return Activator.CreateInstance(genericType, new object[] {});
         }
-        private static CompilerResults Compile(string code)
+        private static Type Compile(string code)
         {
             var param = new CompilerParameters();
             param.GenerateExecutable = false;
@@ -88,7 +84,17 @@ namespace StructureMap.AutoMocking.NSubstitute
 
             var compiler = CSharpCodeProvider.CreateProvider("CSharp");
 
-            return compiler.CompileAssemblyFromSource(param, code);
+            var result = compiler.CompileAssemblyFromSource(param, code);
+
+            if (result.Errors.Count != 0)
+                throw new Exception("Could not compile");
+
+            var assembly = result.CompiledAssembly;
+            var assembledType =
+                assembly.GetTypes().FirstOrDefault(
+                    x => x.ContainsGenericParameters && x.Name.Contains("NSubstituteAutoMocker"));
+
+            return assembledType;
         }
     }
 
